@@ -1,1 +1,251 @@
+//--->get data > start
+function GetAllData()
+{
+  //---> get sheet1 data
+  try 
+  {
+    //sheet name you want to connect/get data from
+    var Sheet = SheetConn("Sheet1");
+
+    //Rang of data start from A2-Row to D-Column
+    //How to edit? =>> change D to any (column)
+    var sheet_data = Sheet.getRange("a2:D"+getLastPopulatedRow(Sheet,"a1:a")).getValues();
+
+    var a1 = [];
+    for (var r = 0; r < sheet_data.length; r++) {
+ 
+      //put it into json object array
+      a1.push({
+        line_num:sheet_data[r][0],
+        task_name: sheet_data[r][1],
+        task_date:sheet_data[r][2],
+        task_desc:sheet_data[r][3]
+      });   
+     
+    }
+
+    
+    if(a1.length > 1){
+      //found row data... next send the json object array back to ajax call
+      var data =        
+      {
+        status: "success",
+        tasks:a1,        
+      }; 
+    }else if(a1.length <1){
+      //didn't find any row data from the sheet
+      var data =        
+      {
+        status:  "error",
+        msg: "no data found", 
+      };  
+    }
+     
+    return  data;
+
+  }catch (error) 
+  {    
+  
+    /* If there's an error, show the error message */
+          //Return data array
+    data =        
+    {
+      status:"Failed",
+      msg: error.toString(),
+    };  
+     return  data;  
+  } 
+}
+//--->get tasks > end
+
+
+
+//--->add tasks > start
+
+function AddTask(AjaxObject)
+{
+  //---> get sheet1 data
+  try 
+  {
+    //sheet name you want to connect/get data from
+    var Sheet = SheetConn("Sheet1");
+
+    var row_id    = AjaxObject.row_id; 
+   
+    var v1 = [
+      [
+        AjaxObject.TaskName,
+        AjaxObject.TaskDate,
+        AjaxObject.TaskDesc,
+      ]
+    ];
+    //var Add =  Sheet.appendRow(v1);
+    var row_id = getLastPopulatedRow(Sheet,"a1:a") +1 ;
+
+    //clear old content
+    //Sheet.getRange("B"+row_id).clearContent();
+
+    //update new content
+    Sheet.getRange("B"+row_id+":D"+row_id).setValues(v1);
+    //Sheet.getRange("B"+row_id).setValue(col_val);
+  
+
+    var data =        
+    {
+      status: "success",
+      msg:"updated content",
+      tasks:GetAllTaskData().tasks,  
+      row_id:row_id,      
+    }; 
+     
+    return  data;
+
+  }catch (error) 
+  {    
+  
+    /* If there's an error, show the error message */
+          //Return data array
+    data =        
+    {
+      status:"Failed",
+      msg: error.toString(),
+    };  
+     return  data;  
+  } 
+}
+//--->add task > end
+
+
+//--->update task > start
+function UpdateTask(AjaxObject)
+{
+  //---> get sheet1 data
+  try 
+  {
+    //sheet name you want to connect/get data from
+    var Sheet = SheetConn("Sheet1");
+
+    var row_id    = AjaxObject.row_id; 
+    
+     
+    var v1 = [
+      [
+        AjaxObject.TaskName,
+        AjaxObject.TaskDate,
+        AjaxObject.TaskDesc,
+      ]
+    ];
+
+    //clear old content
+    //Sheet.getRange("B"+row_id).clearContent();
+
+    //update new content
+    Sheet.getRange("B"+row_id+":D"+row_id).setValues(v1);
+    //Sheet.getRange("B"+row_id).setValue(col_val);
+  
+
+    var data =        
+    {
+      status: "success",
+      msg:"updated content",
+      tasks:GetAllTaskData().tasks,  
+      row_id:row_id,      
+    }; 
+     
+    return  data;
+
+  }catch (error) 
+  {    
+  
+    /* If there's an error, show the error message */
+          //Return data array
+    data =        
+    {
+      status:"Failed",
+      msg: error.toString(),
+    };  
+     return  data;  
+  } 
+}
+//--->update task > end
+
+
+//--->delete task > start
+function DeleteTask(AjaxObject)
+{
+  //---> get sheet1 data
+  try 
+  {
+    //sheet name you want to connect/get data from
+    var Sheet = SheetConn("Sheet1");
+
+    var row_id    = AjaxObject.row_id; 
+   
+    //update new content
+    //Sheet.getRange("B"+row_id+":D"+row_id).setValues(v1);
+    //Sheet.getRange("B"+row_id).setValue(col_val);
+    Sheet.deleteRow(row_id);
+  
+
+    var data =        
+    {
+      status: "success",
+      msg:"updated content",
+      tasks:GetAllTaskData().tasks,  
+      row_id:row_id,      
+    }; 
+     
+    return  data;
+
+  }catch (error) 
+  {    
+  
+    /* If there's an error, show the error message */
+          //Return data array
+    data =        
+    {
+      status:"Failed",
+      msg: error.toString(),
+    };  
+     return  data;  
+  } 
+}
+//--->delete task > end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
